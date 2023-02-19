@@ -13,6 +13,9 @@ public class UsersServiceMap implements UsersService {
 
     @Override
     public User save(User user) {
+        if(findById(user.getId()).isEmpty()){
+            user.setId(String.valueOf(userDB.size()));
+        }
         userDB.put(user.getId(), user);
         return userDB.get(user.getId());
     }

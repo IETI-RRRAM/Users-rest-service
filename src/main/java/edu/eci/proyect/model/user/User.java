@@ -48,6 +48,10 @@ public class User implements Serializable {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -113,4 +117,6 @@ public class User implements Serializable {
     public int hashCode() {
         return Objects.hash(id, name, lastName, email, passwordHash, createdAt);
     }
+
+
 }
