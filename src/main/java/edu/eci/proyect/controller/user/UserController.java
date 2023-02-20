@@ -51,9 +51,7 @@ public class UserController {
     //Update
     @PutMapping("{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") String id, @RequestBody UserDto userDTO) {
-        User userToUpdate = usersService.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         User userUpdated = usersService.update(new User(userDTO), id);
-        usersService.save(userToUpdate);
         return ResponseEntity.ok(userUpdated);
     }
 
