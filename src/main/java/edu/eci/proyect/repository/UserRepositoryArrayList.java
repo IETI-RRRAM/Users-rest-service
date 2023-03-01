@@ -1,5 +1,6 @@
 package edu.eci.proyect.repository;
 
+import edu.eci.proyect.exception.UserNotFoundException;
 import edu.eci.proyect.model.user.User;
 import edu.eci.proyect.model.user.UserDto;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,7 @@ public class UserRepositoryArrayList implements UserRepository{
     @Override
     public User save(User user) {
         db.add(user);
-        for (User userToSearch: db) {
-            if(user.getId().equals(userToSearch.getId())){
-                return userToSearch;
-            }
-        }
-        return null;
+        return user;
     }
 
     @Override
@@ -40,21 +36,18 @@ public class UserRepositoryArrayList implements UserRepository{
 
     @Override
     public User update(User user, String id) {
-        for (User userToSearch: db) {
-            if(user.getId().equals(userToSearch.getId())){
-                userToSearch.update(new UserDto(user.getId(), user.getName(), user.getLastName()));
-                return userToSearch;
+        for (int i = 0; i < db.size(); i++) {
+            User u = db.get(i);
+            if (u.getId().equals(id)) {
+                db.set(i, user);
+                return user;
             }
         }
-        return null;
+        throw new UserNotFoundException("User not found");
     }
 
     @Override
     public void deleteById(String id) {
-        for (User user : db) {
-            if (user.getId().equals(id)) {
-                db.remove(user);
-            }
-        }
+        db.removeIf(user -> user.getId().equals(id));
     }
 }
