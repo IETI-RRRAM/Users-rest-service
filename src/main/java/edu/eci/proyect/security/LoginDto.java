@@ -2,9 +2,9 @@ package edu.eci.proyect.security;
 
 public class LoginDto
 {
-    String email;
+    private String email;
 
-    String password;
+    private String password;
 
     public LoginDto( String email, String password )
     {

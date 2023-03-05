@@ -119,4 +119,7 @@ public class User implements Serializable {
     }
 
 
+    public String getPasswordHash() {
+        return passwordHash;
+    }
 }

@@ -39,8 +39,8 @@ public class AuthController
     @PostMapping
     public TokenDto login(@RequestBody LoginDto loginDto )
     {
-        User user = usersService.findByEmail( loginDto.email );
-        if ( BCrypt.checkpw( loginDto.password, user.getPasswordHash() ) )
+        User user = usersService.findByEmail( loginDto.getEmail() ).orElseThrow();
+        if ( BCrypt.checkpw( loginDto.getPassword(), user.getPasswordHash() ) )
         {
             return generateTokenDto( user );
         }

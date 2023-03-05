@@ -35,7 +35,9 @@ public class UserRepositoryMongoDB implements UserRepository{
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return Optional.empty();
+        Query query = new Query();
+        query.addCriteria(Criteria.where("email").is(email));
+        return Optional.ofNullable(mongoTemplate.findOne(query, User.class));
     }
 
     @Override
