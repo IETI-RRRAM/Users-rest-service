@@ -10,13 +10,12 @@ public interface UserRepository {
     User save(User user);
     Optional<User> findById(String id);
 
+    Optional<User> findByEmail(String email);
+
     List<User> findAll();
 
     User update(User user, String id);
 
     void deleteById(String id);
-
-
-
 
 }

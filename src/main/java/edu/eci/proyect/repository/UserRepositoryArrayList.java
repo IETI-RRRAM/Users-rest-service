@@ -30,6 +30,11 @@ public class UserRepositoryArrayList implements UserRepository{
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        return Optional.empty();
+    }
+
+    @Override
     public List<User> findAll() {
         return db;
     }

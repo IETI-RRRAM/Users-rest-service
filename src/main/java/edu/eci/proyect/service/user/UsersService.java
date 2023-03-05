@@ -12,6 +12,8 @@ public interface UsersService {
 
     Optional<User> findById(String id);
 
+    Optional<User> findByEmail(String email);
+
     List<User> all();
 
     void deleteById(String id);

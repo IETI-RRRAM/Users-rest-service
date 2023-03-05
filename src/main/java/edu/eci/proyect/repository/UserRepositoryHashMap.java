@@ -18,6 +18,11 @@ public class UserRepositoryHashMap implements UserRepository{
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        return Optional.empty();
+    }
+
+    @Override
     public List<User> findAll() {
         return new ArrayList<User>(db.values());
     }
