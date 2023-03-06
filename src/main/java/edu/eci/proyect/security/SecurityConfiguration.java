@@ -17,7 +17,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
          http.cors().and().csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers( HttpMethod.GET, "/v1/health" ).permitAll()
+                .requestMatchers( HttpMethod.POST, "/v1/users" ).permitAll()
                 .requestMatchers( HttpMethod.POST,"/v1/auth" ).permitAll()
                 .anyRequest().authenticated()
                 .and()

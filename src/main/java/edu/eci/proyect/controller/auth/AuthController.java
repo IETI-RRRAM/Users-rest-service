@@ -8,14 +8,15 @@ import edu.eci.proyect.security.TokenDto;
 import edu.eci.proyect.service.user.UsersService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.crypto.SecretKey;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -25,15 +26,19 @@ import java.util.Date;
 public class AuthController
 {
 
-    @Value( "${app.secret}" )
-    String secret;
     private final Integer TOKEN_DURATION_MINUTES = 60;
+
+    private static final SecretKey SECRET = Keys.secretKeyFor(SignatureAlgorithm.HS256);;
 
     private final UsersService usersService;
 
     public AuthController( @Autowired UsersService usersService )
     {
         this.usersService = usersService;
+    }
+
+    public static SecretKey getSECRET() {
+        return SECRET;
     }
 
     @PostMapping
@@ -55,10 +60,10 @@ public class AuthController
     {
         return Jwts.builder()
                 .setSubject( user.getId() )
-                .claim( CLAIMS_ROLES_KEY, user.getRoles() )
+                //.claim( CLAIMS_ROLES_KEY, user.getRoles() )
                 .setIssuedAt(new Date() )
                 .setExpiration( expirationDate )
-                .signWith( SignatureAlgorithm.HS256, secret )
+                .signWith(SECRET)
                 .compact();
     }
 
