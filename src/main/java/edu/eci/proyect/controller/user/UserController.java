@@ -4,6 +4,7 @@ import edu.eci.proyect.exception.UserNotFoundException;
 import edu.eci.proyect.model.user.User;
 import edu.eci.proyect.model.user.UserDto;
 import edu.eci.proyect.service.user.UsersService;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,7 @@ public class UserController {
     }
 
     //Update
+    @RolesAllowed("ADMIN")
     @PutMapping("{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") String id, @RequestBody UserDto userDTO) {
         User userUpdated = usersService.update(new User(userDTO), id);
@@ -56,6 +58,7 @@ public class UserController {
     }
 
     //Delete
+    @RolesAllowed("ADMIN")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") String id) {
         usersService.findById(id).orElseThrow(() -> new UserNotFoundException(id));

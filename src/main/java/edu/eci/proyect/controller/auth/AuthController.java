@@ -4,6 +4,7 @@ package edu.eci.proyect.controller.auth;
 import edu.eci.proyect.exception.InvalidCredentialsException;
 import edu.eci.proyect.model.user.User;
 import edu.eci.proyect.security.LoginDto;
+import edu.eci.proyect.security.Roles;
 import edu.eci.proyect.security.TokenDto;
 import edu.eci.proyect.service.user.UsersService;
 import io.jsonwebtoken.Jwts;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.crypto.SecretKey;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 
@@ -60,7 +63,7 @@ public class AuthController
     {
         return Jwts.builder()
                 .setSubject( user.getId() )
-                //.claim( CLAIMS_ROLES_KEY, user.getRoles() )
+                .claim(new ArrayList<>( Collections.singleton( Roles.WORKER )).toString(), user.getRoles() )
                 .setIssuedAt(new Date() )
                 .setExpiration( expirationDate )
                 .signWith(SECRET)

@@ -19,11 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static edu.eci.proyect.controller.auth.AuthController.getSECRET;
 
@@ -41,7 +37,6 @@ public class JwtRequestFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain ) throws ServletException, IOException
     {
         String authHeader = request.getHeader( HttpHeaders.AUTHORIZATION );
-
         if ( HttpMethod.OPTIONS.name().equals( request.getMethod() ) )
         {
             response.setStatus( HttpServletResponse.SC_OK );
@@ -54,21 +49,18 @@ public class JwtRequestFilter extends OncePerRequestFilter
                 Optional<Cookie> optionalCookie =
                         request.getCookies() != null ? Arrays.stream( request.getCookies() ).filter(
                                 cookie -> Objects.equals( cookie.getName(), "AUTHENTICATION" ) ).findFirst() : Optional.empty();
-
                 String headerJwt = null;
                 if ( authHeader != null && authHeader.startsWith( "Bearer " ) )
                 {
                     headerJwt = authHeader.substring( 7 );
                 }
                 String token = optionalCookie.isPresent() ? optionalCookie.get().getValue() : headerJwt;
-
                 if ( token != null )
                 {
                     Jws<Claims> claims = Jwts.parserBuilder().setSigningKey( getSECRET() ).build().parseClaimsJws( token );
                     Claims claimsBody = claims.getBody();
                     String subject = claimsBody.getSubject();
-                    List<String> roles  = claims.getBody().get( "roles" , ArrayList.class);
-
+                    List<String> roles  = claims.getBody().get( new ArrayList<>( Collections.singleton( Roles.WORKER )).toString() , ArrayList.class);
                     if (roles == null) {
                         response.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid token roles");
                     } else {
@@ -93,4 +85,4 @@ public class JwtRequestFilter extends OncePerRequestFilter
         }
     }
 
-}=
+}

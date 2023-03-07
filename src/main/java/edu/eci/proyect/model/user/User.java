@@ -1,12 +1,12 @@
 package edu.eci.proyect.model.user;
 
+import edu.eci.proyect.security.Roles;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 @Document(collection = "user_collection")
 public class User implements Serializable {
@@ -21,6 +21,8 @@ public class User implements Serializable {
     private String passwordHash;
     private Date createdAt;
 
+    private List<Roles> roles;
+
     public User() {
 
     }
@@ -32,6 +34,7 @@ public class User implements Serializable {
         this.email = email;
         this.passwordHash = new BCryptPasswordEncoder().encode(password);
         this.createdAt = new Date();
+        this.roles = new ArrayList<>( Collections.singleton( Roles.WORKER ) );
     }
 
     public User(UserDto userDto) {
@@ -41,6 +44,8 @@ public class User implements Serializable {
         this.email = userDto.getEmail();
         this.passwordHash = new BCryptPasswordEncoder().encode(userDto.getPassword());
         this.createdAt = new Date();
+        this.roles = new ArrayList<>( Collections.singleton( Roles.WORKER ) );
+
     }
 
 
@@ -121,5 +126,9 @@ public class User implements Serializable {
 
     public String getPasswordHash() {
         return passwordHash;
+    }
+
+    public Object getRoles() {
+        return roles;
     }
 }
