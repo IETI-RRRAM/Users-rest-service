@@ -1,6 +1,7 @@
 package edu.eci.proyect.service.user;
 
 
+import edu.eci.proyect.exception.UserAlreadyExistException;
 import edu.eci.proyect.model.user.User;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Optional;
 
 public interface UsersService {
 
-    User save(User user);
+    User save(User user) throws UserAlreadyExistException;
 
     Optional<User> findById(String id);
 
@@ -16,7 +17,7 @@ public interface UsersService {
 
     List<User> all();
 
-    void deleteById(String id);
+    boolean deleteById(String id);
 
     User update(User user, String userId);
 }
