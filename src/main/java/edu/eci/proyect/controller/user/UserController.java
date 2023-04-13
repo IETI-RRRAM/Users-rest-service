@@ -37,9 +37,15 @@ public class UserController {
     }
 
     //Read
-    @GetMapping("{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<User> findById(@PathVariable("id") String id) {
         User userFound = usersService.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        return ResponseEntity.ok(userFound);
+    }
+
+    @GetMapping("/email/{email}")
+    public  ResponseEntity<User> findByEmail(@PathVariable("email") String email){
+        User userFound = usersService.findByEmail(email).orElseThrow(()-> new UserNotFoundException(email));
         return ResponseEntity.ok(userFound);
     }
 
