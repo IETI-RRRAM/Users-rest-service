@@ -2,6 +2,7 @@ package edu.eci.proyect.controller.auth;
 
 
 import edu.eci.proyect.exception.InvalidCredentialsException;
+import edu.eci.proyect.model.user.ErrorResponse;
 import edu.eci.proyect.model.user.User;
 import edu.eci.proyect.security.LoginDto;
 import edu.eci.proyect.security.Roles;
@@ -11,17 +12,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.SecretKey;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 
 @RestController
@@ -47,7 +44,7 @@ public class AuthController
     @PostMapping
     public TokenDto login(@RequestBody LoginDto loginDto )
     {
-        User user = usersService.findByEmail( loginDto.getEmail() ).orElseThrow();
+        User user = usersService.findByEmail( loginDto.getEmail() ).orElseThrow(InvalidCredentialsException::new);
         if ( BCrypt.checkpw( loginDto.getPassword(), user.getPasswordHash() ) )
         {
             return generateTokenDto( user );
@@ -57,6 +54,13 @@ public class AuthController
             throw new InvalidCredentialsException();
         }
 
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorResponse handleInvalidCredentialsException(InvalidCredentialsException e) {
+        return new ErrorResponse(e.getReason(), HttpStatus.UNAUTHORIZED.value());
     }
 
     private String generateToken( User user, Date expirationDate )
